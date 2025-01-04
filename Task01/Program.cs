@@ -1,32 +1,114 @@
 ﻿using System;
-using MyCustomDictionary;  // Простір імен з бібліотеки класів
+using System.Collections;
+using System.Collections.Generic;
+using DictionaryExample;
 
-namespace MyDictionaryTest
+namespace MyDictionaryExample
 {
+    // Определение класса MyDictionary
+    public class MyDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
+    {
+        private List<TKey> _keys;
+        private List<TValue> _values;
+
+        public MyDictionary()
+        {
+            _keys = new List<TKey>();
+            _values = new List<TValue>();
+        }
+
+        // Метод добавления элемента
+        public void Add(TKey key, TValue value)
+        {
+            if (_keys.Contains(key))
+            {
+                throw new ArgumentException("An element with the same key already exists.");
+            }
+            _keys.Add(key);
+            _values.Add(value);
+        }
+
+        // Индексатор для получения значения элемента по ключу
+        public TValue this[TKey key]
+        {
+            get
+            {
+                int index = _keys.IndexOf(key);
+                if (index == -1)
+                {
+                    throw new KeyNotFoundException("The key was not found.");
+                }
+                return _values[index];
+            }
+        }
+
+        // Свойство только для чтения для получения общего количества элементов
+        public int Count
+        {
+            get { return _keys.Count; }
+        }
+
+        // Реализация метода GetEnumerator для поддержки foreach
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            for (int i = 0; i < _keys.Count; i++)
+            {
+                yield return new KeyValuePair<TKey, TValue>(_keys[i], _values[i]);
+            }
+        }
+
+        // Необобщенная реализация метода GetEnumerator
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            // Створення екземпляра MyDictionary
+            // Создание экземпляра MyDictionary
             MyDictionary<string, int> myDictionary = new MyDictionary<string, int>();
 
-            // Додавання елементів
+            // Добавление элементов
             myDictionary.Add("One", 1);
             myDictionary.Add("Two", 2);
             myDictionary.Add("Three", 3);
 
-            // Використання індексатора для отримання значення за ключем
-            Console.WriteLine("Значення для ключа 'Two': " + myDictionary["Two"]);
+            // Использование индексатора для получения значения элемента по ключу
+            Console.WriteLine("Value for key 'Two': " + myDictionary["Two"]);
 
-            // Отримання загальної кількості елементів
-            Console.WriteLine("Загальна кількість елементів: " + myDictionary.Count);
+            // Получение общего количества элементов
+            Console.WriteLine("Total number of elements: " + myDictionary.Count);
 
-            // Перебір елементів за допомогою foreach
-            Console.WriteLine("Елементи MyDictionary:");
+            // Перебор элементов с использованием foreach
+            Console.WriteLine("Elements in MyDictionary:");
             foreach (var kvp in myDictionary)
             {
-                Console.WriteLine($"Ключ: {kvp.Key}, Значення: {kvp.Value}");
+                Console.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
             }
+
+            DictionaryExample.MyDictionary<string, int> myDictionaly2 = new DictionaryExample.MyDictionary<string, int>();
+            // Добавление элементов
+            myDictionaly2.Add("One", 1);
+            myDictionaly2.Add("Two", 2);
+            myDictionaly2.Add("Three", 3);
+
+            // Использование индексатора для получения значения элемента по ключу
+            Console.WriteLine("Value for key 'Two': " + myDictionaly2["Two"]);
+
+            // Получение общего количества элементов
+            Console.WriteLine("Total number of elements: " + myDictionaly2.Count);
+
+            // Перебор элементов с использованием foreach
+            Console.WriteLine("Elements in MyDictionary:");
+            foreach (var kvp in myDictionaly2)
+            {
+                Console.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+            }
+
+
         }
     }
 }
