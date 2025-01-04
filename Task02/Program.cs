@@ -1,5 +1,5 @@
 ﻿using AssemblyA;
-
+using MyNamespace;
 namespace AssemblyB
 {
     public class DerivedClass : BaseClass
@@ -20,6 +20,11 @@ namespace AssemblyB
 
             // Викликаємо метод базового класу через похідний клас
             derived.CallBasePublicMethod();
+
+            MyNamespace.MyClass a = new MyClass();
+            a.MyMethod();
         }
+
+
     }
 }
